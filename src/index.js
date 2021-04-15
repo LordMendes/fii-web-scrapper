@@ -2,26 +2,20 @@ const puppeteer = require('puppeteer');
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 const $ = require('cheerio');
 
-const url = 'https://fiis.com.br/';
+const urlFiis = 'https://fiis.com.br/';
+const urlFundsExplorer = 'https://www.fundsexplorer.com.br/funds/';
+
 const fiis = ['irdm11','ctps11','rbrf11'];
 
-const getHtml = async (browser) => {
-  const page = await browser.newPage();
-  const searchUrl = url+fiis[0];
-  console.log('url -> ',searchUrl)
-  return page.goto(searchUrl).then(function() {
-    return page.content();  
-  })
-}
 
 const getFiiHeaderValues = (html) => {
   let headerListValue=[];
   let headerListTitle=[];
-  $('#informations--indexes .item .value', html).each(function() {
-    headerListValue.push($(this).text().split(' ').join(' '));
+  $('.carousel-cell .indicator-title', html).each(function() {
+    headerListTitle.push($(this).text().split('\n').join(' '));    
   });
-  $('#informations--indexes .item .title', html).each(function() {
-    headerListTitle.push($(this).text().split(' ').join(' '));
+  $('.carousel-cell .indicator-value', html).each(function() {
+    headerListValue.push($(this).text().split('\n').join(' ').replace(/\s/g, ''));
   });
   let header = {};
   headerListTitle.forEach((key, index) => header[key] = headerListValue[index])
@@ -85,10 +79,10 @@ const getFiiLastUpdates = (html) => {
 }
 
 
-function request(url, action) {
+function request(url, fiiCode, action) {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
+    xhr.open("GET", url+fiiCode, true);
     xhr.send();
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
@@ -102,11 +96,11 @@ function request(url, action) {
 
 
 const run = async () => {
-  const administratorInfo = await request(url+fiis[0], getAdministratorInfo)
-  const headerValues = await request(url+fiis[0], getFiiHeaderValues)
-  const lastRevenue = await request(url+fiis[0], getLastRevenue)
-  const fiiUpdate = await request(url+fiis[0], getFiiLastUpdates)
-  console.log(fiiUpdate);
+  const administratorInfo = await request(urlFiis, fiis[0], getAdministratorInfo)
+  const headerValues = await request(urlFundsExplorer, fiis[0], getFiiHeaderValues)
+  const lastRevenue = await request(urlFiis, fiis[0], getLastRevenue)
+  const fiiUpdate = await request(urlFiis, fiis[0], getFiiLastUpdates)
+  console.log(headerValues)
 }
 
 
