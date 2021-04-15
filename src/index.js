@@ -39,6 +39,52 @@ const getAdministratorInfo = (html) => {
   return administrator;
 }
 
+const getLastRevenue = (html) => {
+  let rawLastRevenueList = [];
+  let lastRevenueList = [];
+  $('#last-revenues--table tbody', html).each(function() {
+    rawLastRevenueList = $(this).text().split('\n').filter(item => !!item);
+  });
+  for(let i = 0 ; i<rawLastRevenueList.length ; i+=5){
+    lastRevenueList.push({
+      baseDate: rawLastRevenueList[i],
+      paymentDate: rawLastRevenueList[i+1],
+      baseQuotation: rawLastRevenueList[i+2],
+      dividendYeld: rawLastRevenueList[i+3],
+      revenue: rawLastRevenueList[i+4]
+    })
+  }
+  return lastRevenueList;
+}
+
+const getFiiLastUpdates = (html) => {
+  let updateNewsList =[];
+  let updateNewsListLink = [];
+  let updateNewsListTitle = [];
+  let updateNewsListDate = [];
+
+  $('#news--wrapper .date', html).each(function() {
+    updateNewsListDate.push($(this).text());
+  });
+  $('#news--wrapper .title', html).each(function() {
+    updateNewsListTitle.push($(this).text());
+  });
+  $('#news--wrapper a', html).each(function() {
+    updateNewsListLink.push($(this).attr('href'))
+  });
+
+  updateNewsListTitle.forEach((title, index) => {
+    updateNewsList.push({
+      title,
+      date: updateNewsListDate[index],
+      link: updateNewsListLink[index] === 'javascript:;' ? null : updateNewsListLink[index]
+    })
+  })
+
+  return updateNewsList;
+}
+
+
 function request(url, action) {
   return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
@@ -58,8 +104,9 @@ function request(url, action) {
 const run = async () => {
   const administratorInfo = await request(url+fiis[0], getAdministratorInfo)
   const headerValues = await request(url+fiis[0], getFiiHeaderValues)
-  console.log(administratorInfo);
-  console.log(headerValues);
+  const lastRevenue = await request(url+fiis[0], getLastRevenue)
+  const fiiUpdate = await request(url+fiis[0], getFiiLastUpdates)
+  console.log(fiiUpdate);
 }
 
 
