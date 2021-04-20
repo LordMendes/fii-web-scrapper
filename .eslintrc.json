@@ -1,0 +1,30 @@
+// 20210419224030
+// https://raw.githubusercontent.com/LordMendes/gymcoach/master/backend/.eslintrc.json
+
+{
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb-base",
+    "prettier"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "class-methods-use-this": 0,
+    "camelcase": 0,
+    "arrow-parens": 2,
+    "import/extensions": [
+      "error",
+      "ignorePackages"
+    ]
+  }
+}
