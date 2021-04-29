@@ -1,4 +1,4 @@
-const {XMLHttpRequest} = require('xmlhttprequest');
+const { XMLHttpRequest } = require('xmlhttprequest');
 const informationGetters = require('./getFiiInformation');
 const { fiis, clubeFiis } = require('./pathUrls');
 
@@ -10,58 +10,50 @@ const {
   getFiiLastUpdates,
 } = informationGetters;
 
-const requestHtml = (url, fiiCode, action) => {
+const requestHtml = (url, fiiCode) => {
   console.log('Request -> ', url + fiiCode);
-  return new Promise(((resolve) => {
+  return new Promise((resolve) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url + fiiCode, true);
     xhr.send();
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         const html = xhr.responseText;
-        const res = action(html);
-        if(xhr.status === 200) resolve(res)
+        if (xhr.status === 200) resolve(html);
         else throw new Error('Request Promise Error');
       }
     };
-  }));
+  });
 };
 
-const requestLastRevenue = async (fiiCode) => {
-  const response = await requestHtml(fiis, fiiCode, getLastRevenue);
-  return response;
+const fiisPageRequest = async (fiiCode) => {
+  const html = await requestHtml(fiis, fiiCode);
+  const fiisRetrievedData = {
+    lastRevenue: getLastRevenue(html),
+    fiiLastUpdates: getFiiLastUpdates(html),
+  };
+  return fiisRetrievedData;
 };
 
-const requestLastUpdates = async (fiiCode) => {
-  const response = await requestHtml(fiis, fiiCode, getFiiLastUpdates);
-  return response;
+const clubeFiisRequest = async (fiiCode) => {
+  const html = await requestHtml(clubeFiis, fiiCode);
+  const fiisRetrievedData = {
+    taxes: getTaxes(html),
+    yield: getYield(html),
+  };
+  return fiisRetrievedData;
 };
 
-
-const requestFiiHeaderValues = async (fiiCode) => {
-  const response = await requestHtml(
-    clubeFiis,
-    fiiCode,
-    getFiiHeaderValues,
-  );
-  return response;
-};
-
-
-const requestTaxes = async (fiiCode) => {
-  const response = await requestHtml(clubeFiis, fiiCode, getTaxes);
-  return response;
-};
-
-const requestYield = async (fiiCode) => {
-  const response = await requestHtml(clubeFiis, fiiCode, getYield);
-  return response;
+const fiiHeadersRequest = async (fiiCode) => {
+  const html = await requestHtml(clubeFiis, fiiCode);
+  const fiiHeadersData = {
+    headers: getFiiHeaderValues(html)
+  }
+  return fiiHeadersData;
 };
 
 module.exports = {
-  requestFiiHeaderValues,
-  requestLastRevenue,
-  requestLastUpdates,
-  requestTaxes,
-  requestYield,
+  fiiHeadersRequest,
+  fiisPageRequest,
+  clubeFiisRequest,
 };
