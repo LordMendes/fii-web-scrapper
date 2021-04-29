@@ -9,7 +9,7 @@ const getFiiHeaderValues = (html) => {
     'valueIPO',
     'manager',
     'mandate',
-    'avarageLiuity30Days',
+    'averageLiquity30Days',
     'quotesVolume',
     'ifix',
   ];
@@ -21,7 +21,6 @@ const getFiiHeaderValues = (html) => {
   headerListTitle.forEach((key, index) => {
     header[key] = headerListValue[index];
   });
-  console.log(header);
   return header;
 };
 

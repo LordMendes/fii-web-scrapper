@@ -10,21 +10,22 @@ const {
   getFiiLastUpdates,
 } = informationGetters;
 
-const requestHtml = (url, fiiCode) => {
-  console.log('Request -> ', url + fiiCode);
-  return new Promise((resolve) => {
+const requestHtml = (url, fiiCode) =>
+  new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', url + fiiCode, true);
     xhr.send();
     xhr.onreadystatechange = () => {
       if (xhr.readyState === 4) {
         const html = xhr.responseText;
-        if (xhr.status === 200) resolve(html);
-        else throw new Error('Request Promise Error');
+        if (xhr.status === 200) {
+          resolve(html);
+        } else {
+          reject(new Error('Request Promise Error'));
+        }
       }
     };
   });
-};
 
 const fiisPageRequest = async (fiiCode) => {
   const html = await requestHtml(fiis, fiiCode);
@@ -47,8 +48,8 @@ const clubeFiisRequest = async (fiiCode) => {
 const fiiHeadersRequest = async (fiiCode) => {
   const html = await requestHtml(clubeFiis, fiiCode);
   const fiiHeadersData = {
-    headers: getFiiHeaderValues(html)
-  }
+    headers: getFiiHeaderValues(html),
+  };
   return fiiHeadersData;
 };
 
