@@ -1,31 +1,9 @@
+/* eslint-disable no-script-url */
 const $ = require('cheerio');
 
-const DEPRECATED_getFiiHeaderValues = (html) => {
-  let headerListValue = [];
-  let headerListTitle = [];
-  // $('.carousel-cell .indicator-title', html).each(function() {
-  //   headerListTitle.push($(this).text().split('\n').join(' '));
-  // });
-  // $('.carousel-cell .indicator-value', html).each(function() {
-  //   headerListValue.push($(this).text().split('\n').join(' ').replace(/\s/g, ''));
-  // });
-
-  $('div', html).each(function () {
-    console.log($(this).text());
-  });
-  $('#primaryTable tr td', html).each(() => {
-    // headerListTitle.push($(this).text().split('\n').join(' '));
-  });
-  let header = {};
-  headerListTitle.forEach(
-    (key, index) => (header[key] = headerListValue[index]),
-  );
-  return header;
-};
-
-const BETA_getFiiHeaderValues = (html) => {
-  let headerListValue = [];
-  let headerListTitle = [
+const getFiiHeaderValues = (html) => {
+  const headerListValue = [];
+  const headerListTitle = [
     'segment',
     'dateIPO',
     'valueIPO',
@@ -39,28 +17,17 @@ const BETA_getFiiHeaderValues = (html) => {
   $('#primaryTable tr td', html).each(function () {
     headerListValue.push($(this).text().split('\n').join(' '));
   });
-  let header = {};
-  headerListTitle.forEach(
-    (key, index) => (header[key] = headerListValue[index]),
-  );
+  const header = {};
+  headerListTitle.forEach((key, index) => {
+    header[key] = headerListValue[index];
+  });
   console.log(header);
   return header;
 };
 
-const DEPRECATED_getAdministratorInfo = (html) => {
-  let administrator = { name: '', cnpj: '' };
-  $('#informations--admin .administrator-name', html).each(function () {
-    administrator.name = $(this).text();
-  });
-  $('#informations--admin .administrator-doc', html).each(function () {
-    administrator.cnpj = $(this).text();
-  });
-  return administrator;
-};
-
 const getLastRevenue = (html) => {
   let rawLastRevenueList = [];
-  let lastRevenueList = [];
+  const lastRevenueList = [];
   $('#last-revenues--table tbody', html).each(function () {
     rawLastRevenueList = $(this)
       .text()
@@ -80,10 +47,10 @@ const getLastRevenue = (html) => {
 };
 
 const getFiiLastUpdates = (html) => {
-  let updateNewsList = [];
-  let updateNewsListLink = [];
-  let updateNewsListTitle = [];
-  let updateNewsListDate = [];
+  const updateNewsList = [];
+  const updateNewsListLink = [];
+  const updateNewsListTitle = [];
+  const updateNewsListDate = [];
 
   $('#news--wrapper .date', html).each(function () {
     updateNewsListDate.push($(this).text());
@@ -109,9 +76,9 @@ const getFiiLastUpdates = (html) => {
   return updateNewsList;
 };
 
-const BETA_getTaxes = (html) => {
-  let taxesValues = [];
-  let taxesTitles = [
+const getTaxes = (html) => {
+  const taxesValues = [];
+  const taxesTitles = [
     'paidOutValueRefYear',
     'percentageOverPatrimonyValue',
     'percentageOverMaketValue',
@@ -127,8 +94,8 @@ const BETA_getTaxes = (html) => {
   return taxes;
 };
 
-const BETA_getYield = (html) => {
-  let yieldTitles = [
+const getYield = (html) => {
+  const yieldTitles = [
     'oneMonthYield',
     'threeMonthYield',
     'sixMonthYield',
@@ -137,7 +104,7 @@ const BETA_getYield = (html) => {
     'patrimonialValue',
     'marketValue',
   ];
-  let yieldValues = [];
+  const yieldValues = [];
   $('.list span', html).each(function () {
     yieldValues.push($(this).text());
   });
@@ -149,9 +116,9 @@ const BETA_getYield = (html) => {
 };
 
 module.exports = {
-  BETA_getFiiHeaderValues,
-  BETA_getTaxes,
-  BETA_getYield,
+  getFiiHeaderValues,
+  getTaxes,
+  getYield,
   getLastRevenue,
   getFiiLastUpdates,
 };
