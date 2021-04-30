@@ -1,8 +1,8 @@
 const {Router} = require('express');
-const fiiRouter = require('./fiis.routes')
+const fiiRouter = require('./fii.routes')
 
 const routes = Router();
 
-routes.use('/fiis', fiiRouter );
+routes.use('/fii', fiiRouter );
 
 module.exports = routes;
