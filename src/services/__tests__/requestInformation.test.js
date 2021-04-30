@@ -15,7 +15,7 @@ describe('clubeFiisRequest Tests', () => {
     const objectKeys = Object.keys(response);
 
     expect(objectKeys).toContain('taxes');
-    expect(objectKeys).toContain('yield');
+    expect(objectKeys).toContain('fiiYield');
   });
 });
 
