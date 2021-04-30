@@ -2,7 +2,7 @@ const express = require('express');
 const routes = require('./shared/routes')
 
 const app = express();
-const PORT = process.env.PORT ||3333;
+const PORT = process.env.PORT || 3333;
 
 app.use(express.json());
 app.use(routes);
