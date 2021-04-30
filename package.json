@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "nodemon src/server.js",
-    "build": "node src/server.js",
     "test": "jest"
   },
   "devDependencies": {
