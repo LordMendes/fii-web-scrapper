@@ -47,9 +47,8 @@ const clubeFiisRequest = async (fiiCode) => {
 
 const fiiHeadersRequest = async (fiiCode) => {
   const html = await requestHtml(clubeFiis, fiiCode);
-  const fiiHeadersData = {
-    headers: getFiiHeaderValues(html),
-  };
+  const fiiHeadersData = getFiiHeaderValues(html);
+  
   return fiiHeadersData;
 };
 
