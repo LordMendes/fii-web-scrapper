@@ -1,6 +1,6 @@
 const { XMLHttpRequest } = require('xmlhttprequest');
 const informationGetters = require('./getFiiInformation');
-const { fiis, clubeFiis } = require('./pathUrls');
+const { fiis, clubeFiis } = require('../utils/pathUrls');
 
 const {
   getFiiHeaderValues,
@@ -40,21 +40,26 @@ const clubeFiisRequest = async (fiiCode) => {
   const html = await requestHtml(clubeFiis, fiiCode);
   const fiisRetrievedData = {
     taxes: getTaxes(html),
-    yield: getYield(html),
+    fiiYield: getYield(html),
   };
   return fiisRetrievedData;
 };
 
 const fiiHeadersRequest = async (fiiCode) => {
   const html = await requestHtml(clubeFiis, fiiCode);
-  const fiiHeadersData = {
-    headers: getFiiHeaderValues(html),
-  };
+  const fiiHeadersData = getFiiHeaderValues(html);
+  
   return fiiHeadersData;
+};
+
+const getFiiData = async (fiiCode) => {
+  const { fiiLastUpdates, lastRevenue } = await fiisPageRequest(fiiCode);
+  const { taxes, fiiYield } = await clubeFiisRequest(fiiCode);
+
+  return { fiiLastUpdates, lastRevenue, taxes, fiiYield };
 };
 
 module.exports = {
   fiiHeadersRequest,
-  fiisPageRequest,
-  clubeFiisRequest,
+  getFiiData,
 };
