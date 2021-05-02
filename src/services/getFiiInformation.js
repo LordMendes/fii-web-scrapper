@@ -102,15 +102,21 @@ const getYield = (html) => {
     'pvpa',
     'patrimonialValue',
     'marketValue',
+    'pratimonialValuePerQuota',
+    'quotaValue'
   ];
   const yieldValues = [];
   $('.list span', html).each(function () {
+    yieldValues.push($(this).text());
+  });
+  $('.progress span', html).each(function () {
     yieldValues.push($(this).text());
   });
   const yieldInfo = yieldTitles.reduce((formattedYieldInfo, title, index) => {
     formattedYieldInfo[title] = yieldValues[index];
     return formattedYieldInfo;
   }, {});
+  console.log(yieldInfo);
   return yieldInfo;
 };
 
