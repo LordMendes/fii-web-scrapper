@@ -4,9 +4,6 @@ const { fiis, clubeFiis } = require('../const/pathUrls');
 
 const {
   getFiiHeaderValues,
-  getTaxes,
-  getYield,
-  getLastRevenue,
   getFiiLastUpdates,
 } = informationGetters;
 
@@ -30,7 +27,6 @@ const requestHtml = (url, fiiCode) =>
 const fiisPageRequest = async (fiiCode) => {
   const html = await requestHtml(fiis, fiiCode);
   const fiisRetrievedData = {
-    lastRevenue: getLastRevenue(html),
     fiiLastUpdates: getFiiLastUpdates(html),
   };
   return fiisRetrievedData;
@@ -39,8 +35,6 @@ const fiisPageRequest = async (fiiCode) => {
 const clubeFiisRequest = async (fiiCode) => {
   const html = await requestHtml(clubeFiis, fiiCode);
   const fiisRetrievedData = {
-    taxes: getTaxes(html),
-    fiiYield: getYield(html),
     headers: getFiiHeaderValues(html),
   };
   return fiisRetrievedData;
@@ -53,7 +47,7 @@ const getGSheetJson = async (fiiCode) => {
   
   const formattedForSheetData = {
     segment: headers.segment,
-    lastYield: lastRevenue[0].revenue,
+    lastYield: Number(lastRevenue[0].revenue.replace(',','.').replace("R$","")),
     manager: headers.manager
   }
 
