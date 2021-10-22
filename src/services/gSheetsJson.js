@@ -46,28 +46,21 @@ const clubeFiisRequest = async (fiiCode) => {
   return fiisRetrievedData;
 };
 
-const fiiHeadersRequest = async (fiiCode) => {
-  const html = await requestHtml(clubeFiis, fiiCode);
-  const fiiHeadersData = getFiiHeaderValues(html);
 
-  return fiiHeadersData;
+const getGSheetJson = async (fiiCode) => {
+  const { lastRevenue } = await fiisPageRequest(fiiCode);
+  const { headers } = await clubeFiisRequest(fiiCode);
+  
+  const formattedForSheetData = {
+    segment: headers.segment,
+    lastYield: lastRevenue[0].revenue,
+    manager: headers.manager
+  }
+
+  return formattedForSheetData;
 };
 
-const getFiiData = async (fiiCode) => {
-  const { fiiLastUpdates, lastRevenue } = await fiisPageRequest(fiiCode);
-  const { taxes, fiiYield, headers } = await clubeFiisRequest(fiiCode);
-
-  return { headers, fiiLastUpdates, lastRevenue, taxes, fiiYield };
-};
-
-const getAllData = async (fiiCode) => {
-  const fiiData = await getFiiData(fiiCode);
-
-  return fiiData;
-};
 
 module.exports = {
-  fiiHeadersRequest,
-  getFiiData,
-  getAllData,
+  getGSheetJson
 };
