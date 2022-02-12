@@ -103,7 +103,7 @@ const getYield = (html) => {
     'patrimonialValue',
     'marketValue',
     'pratimonialValuePerQuota',
-    'quotaValue'
+    'quotaValue',
   ];
   const yieldValues = [];
   $('.list span', html).each(function () {
@@ -120,10 +120,37 @@ const getYield = (html) => {
   return yieldInfo;
 };
 
+const getFiiInfoData = (html) => {
+  let segment = '';
+  let manager = '';
+  const headers = []
+
+  
+  $('#sigla_topo h4', html).each(function () {
+    manager = $(this).text().split('\n').join(' ');
+  });
+  $('#objetivo_antes a', html).each(function () {
+    segment = $(this).text().trimStart().replace(/(\r\n|\n|\r|\t)/gm, "");
+  });
+  $('#flashs span span b', html).each(function () {
+    headers.push($(this).text().split('\n').join(' '));
+  });
+
+  const lastYield = headers[4];
+
+
+  return {
+    segment,
+    manager,
+    lastYield,
+  };
+};
+
 module.exports = {
   getFiiHeaderValues,
   getTaxes,
   getYield,
   getLastRevenue,
   getFiiLastUpdates,
+  getFiiInfoData,
 };
