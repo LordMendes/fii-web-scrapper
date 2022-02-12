@@ -1,6 +1,6 @@
 const { XMLHttpRequest } = require('xmlhttprequest');
 const informationGetters = require('./getFiiInformation');
-const { fiis, clubeFiis } = require('../const/pathUrls');
+const { fiis, clubeFiis, mundoFii } = require('../const/pathUrls');
 
 const {
   getFiiHeaderValues,
@@ -8,6 +8,7 @@ const {
   getYield,
   getLastRevenue,
   getFiiLastUpdates,
+  getFiiInfoData,
 } = informationGetters;
 
 const requestHtml = (url, fiiCode) =>
@@ -46,21 +47,28 @@ const clubeFiisRequest = async (fiiCode) => {
   return fiisRetrievedData;
 };
 
+const mundoFiiRequest = async (fiiCode) => {
+  const html = await requestHtml(mundoFii, fiiCode);
+  const fiisRetrievedData = {
+    data: getFiiInfoData(html),
+  };
+  return fiisRetrievedData;
+};
 
 const getGSheetJson = async (fiiCode) => {
-  const { lastRevenue } = await fiisPageRequest(fiiCode);
-  const { headers } = await clubeFiisRequest(fiiCode);
+  const { data } = await mundoFiiRequest(fiiCode);
   
   const formattedForSheetData = {
-    segment: headers.segment,
-    lastYield: Number(lastRevenue[0].revenue.replace(',','.').replace('R$','')),
-    manager: headers.manager
-  }
+    segment: data.segment,
+    lastYield: Number(
+      data.lastYield.replace(',', '.').replace('R$', ''),
+    ),
+    manager: data.manager,
+  };
 
   return formattedForSheetData;
 };
 
-
 module.exports = {
-  getGSheetJson
+  getGSheetJson,
 };
